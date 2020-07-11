@@ -8,7 +8,7 @@ import (
 // MapKeys : only apply to single type key
 func MapKeys(m interface{}) interface{} {
 	v := vof(m)
-	failPOnErrWhen(v.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
+	failP1OnErrWhen(v.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
 
 	keys := v.MapKeys()
 	if L := len(keys); L > 0 {
@@ -35,7 +35,7 @@ func MapKeys(m interface{}) interface{} {
 // MapKVs : only apply to single type key and single type value
 func MapKVs(m interface{}) (interface{}, interface{}) {
 	v := vof(m)
-	failPOnErrWhen(v.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
+	failP1OnErrWhen(v.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
 
 	keys := v.MapKeys()
 	if L := len(keys); L > 0 {
@@ -55,7 +55,7 @@ func MapKVs(m interface{}) (interface{}, interface{}) {
 // mapJoin : overwritted by the 2nd params
 func mapJoin(m1, m2 interface{}) (interface{}, error) {
 	v1, v2 := vof(m1), vof(m2)
-	// failPOnErrWhen(v1.Kind() != typMAP || v2.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
+	// failP1OnErrWhen(v1.Kind() != typMAP || v2.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
 	if v1.Kind() != typMAP || v2.Kind() != typMAP {
 		return nil, fEf("PARAM_INVALID_MAP")
 	}
@@ -65,11 +65,11 @@ func mapJoin(m1, m2 interface{}) (interface{}, error) {
 		k1, k2 := keys1[0], keys2[0]
 		k1Type, k2Type := tof(k1.Interface()), tof(k2.Interface())
 		v1Type, v2Type := tof(v1.MapIndex(k1).Interface()), tof(v2.MapIndex(k2).Interface())
-		// failPOnErrWhen(k1Type != k2Type, "%v", fEf("MAPS_DIF_KEY_TYPE"))
+		// failP1OnErrWhen(k1Type != k2Type, "%v", fEf("MAPS_DIF_KEY_TYPE"))
 		if k1Type != k2Type {
 			return nil, fEf("MAPS_DIF_KEY_TYPE")
 		}
-		// failPOnErrWhen(v1Type != v2Type, "%v", fEf("MAPS_DIF_VALUE_TYPE"))
+		// failP1OnErrWhen(v1Type != v2Type, "%v", fEf("MAPS_DIF_VALUE_TYPE"))
 		if v1Type != v2Type {
 			return nil, fEf("MAPS_DIF_VALUE_TYPE")
 		}
@@ -101,7 +101,7 @@ func MapMerge(ms ...interface{}) interface{} {
 	mm := ms[0]
 	for _, m := range ms[1:] {
 		mm, e = mapJoin(mm, m)
-		failPOnErr("%v", e)
+		failP1OnErr("%v", e)
 	}
 	return mm
 }

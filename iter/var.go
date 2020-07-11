@@ -12,6 +12,6 @@ var (
 	fSf  = fmt.Sprintf
 	fEf  = fmt.Errorf
 
-	failOnErr  = fn.FailOnErr
-	failPOnErr = fn.FailPOnErr
+	failOnErr   = fn.FailOnErr
+	failP1OnErr = fn.FailP1OnErr
 )

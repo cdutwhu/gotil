@@ -9,7 +9,7 @@ import (
 // Struct2Env :
 func Struct2Env(key string, s interface{}) {
 	stVal := vof(s)
-	failPOnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
+	failP1OnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
 
 	bytes, err := json.Marshal(s)
 	failOnErr("%v", err)
@@ -19,10 +19,10 @@ func Struct2Env(key string, s interface{}) {
 // Env2Struct :
 func Env2Struct(key string, s interface{}) interface{} {
 	stVal := vof(s)
-	failPOnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
+	failP1OnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
 
 	jsonstr := os.Getenv(key)
-	failPOnErrWhen(!isJSON(jsonstr), "%v", fEf("JSON_INVALID"))
+	failP1OnErrWhen(!isJSON(jsonstr), "%v", fEf("JSON_INVALID"))
 	failOnErr("%v", json.Unmarshal([]byte(jsonstr), s))
 	return s
 }
@@ -30,7 +30,7 @@ func Env2Struct(key string, s interface{}) interface{} {
 // Struct2Map : each field name MUST be Exportable
 func Struct2Map(s interface{}) map[string]interface{} {
 	stVal := vof(s)
-	failPOnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
+	failP1OnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
 
 	ret := make(map[string]interface{})
 	stValElem := stVal.Elem()
@@ -52,6 +52,6 @@ func Struct2Map(s interface{}) map[string]interface{} {
 // StructFields :
 func StructFields(s interface{}) []string {
 	stVal := vof(s)
-	failPOnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
+	failP1OnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
 	return MapKeys(Struct2Map(s)).([]string)
 }

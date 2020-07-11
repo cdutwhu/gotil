@@ -3,19 +3,23 @@ package rflx
 import (
 	"fmt"
 	"reflect"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/cdutwhu/debog/base"
 	"github.com/cdutwhu/debog/fn"
-	"github.com/cdutwhu/gotil/jx"
+	"github.com/cdutwhu/gotil/judge"
 )
 
 var (
-	fEf    = fmt.Errorf
-	fPln   = fmt.Println
-	fSp    = fmt.Sprint
-	fPf    = fmt.Printf
-	sSplit = strings.Split
+	fEf         = fmt.Errorf
+	fPln        = fmt.Println
+	fSp         = fmt.Sprint
+	fPf         = fmt.Printf
+	fPt         = fmt.Print
+	sSplit      = strings.Split
+	scParseUint = strconv.ParseUint
 
 	vof       = reflect.ValueOf
 	tof       = reflect.TypeOf
@@ -31,12 +35,18 @@ var (
 	typSLICE  = reflect.Slice
 	typSTRUCT = reflect.Struct
 	typPTR    = reflect.Ptr
-	// typARRAY = reflect.Array
+	typARRAY  = reflect.Array
 
-	exist          = base.Exist
-	failPOnErrWhen = fn.FailPOnErrWhen
-	failPOnErr     = fn.FailPOnErr
-	failOnErrWhen  = fn.FailOnErrWhen
-	failOnErr      = fn.FailOnErr
-	isJSON         = jx.IsJSON
+	exist           = base.Exist
+	failPnOnErrWhen = fn.FailPnOnErrWhen
+	failPnOnErr     = fn.FailPnOnErr
+	failP1OnErrWhen = fn.FailP1OnErrWhen
+	failP1OnErr     = fn.FailP1OnErr
+	failOnErrWhen   = fn.FailOnErrWhen
+	failOnErr       = fn.FailOnErr
+	isJSON          = judge.IsJSON
+)
+
+var (
+	repParam = regexp.MustCompile(`^\$[0-9]+$`)
 )

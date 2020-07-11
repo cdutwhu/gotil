@@ -16,13 +16,13 @@ func Iter(params ...int) <-chan int {
 	case 3:
 		start, step, end = params[0], params[1], params[2]
 	default:
-		failPOnErr("%v: params' count is 1, 2, or 3", fEf("PARAM_INVALID"))
+		failP1OnErr("%v: params' count is 1, 2, or 3", fEf("PARAM_INVALID"))
 	}
 	if end <= start {
-		failPOnErr("%v: [end](%d) must be greater than [start](%d)", fEf("PARAM_INVALID"), end, start)
+		failP1OnErr("%v: [end](%d) must be greater than [start](%d)", fEf("PARAM_INVALID"), end, start)
 	}
 	if step < 1 {
-		failPOnErr("%v: [step](%d) must be greater than 0", fEf("PARAM_INVALID"), step)
+		failP1OnErr("%v: [step](%d) must be greater than 0", fEf("PARAM_INVALID"), step)
 	}
 
 	ch := make(chan int)

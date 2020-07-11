@@ -21,15 +21,17 @@ func TestToSet(t *testing.T) {
 }
 
 func TestSetIntersect(t *testing.T) {
+	var arr0 []string = nil // []string{"d"}
 	arr1 := []string{"A", "B", "c", "d"}
 	arr2 := []string{"C", "d", "a"}
-	fPln(SetIntersect(arr1, arr2).([]string))
+	fPln(SetIntersect(arr0, arr1, arr2).([]string))
 }
 
 func TestSetUnion(t *testing.T) {
+	var arr0 []string = []string{"M"}
 	arr1 := []string{"A", "B", "c", "d"}
 	arr2 := []string{"C", "d", "A"}
-	fPln(SetUnion(arr1, arr2).([]string))
+	fPln(SetUnion(arr0, arr1, arr2).([]string))
 }
 
 func TestToGeneralSlc(t *testing.T) {

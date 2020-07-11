@@ -9,7 +9,7 @@ func SliceAttach(s1, s2 interface{}, pos int) interface{} {
 	v1, v2 := vof(s1), vof(s2)
 
 	k1, k2 := v1.Kind(), v2.Kind()
-	failPOnErrWhen(!(k1 == typSLICE && k2 == typSLICE), "%v", fEf("PARAM_INVALID"))
+	failP1OnErrWhen(!(k1 == typSLICE && k2 == typSLICE), "%v", fEf("PARAM_INVALID"))
 
 	l1, l2 := v1.Len(), v2.Len()
 	if l1 > 0 && l2 > 0 {
@@ -36,10 +36,10 @@ func SliceCover(ss ...interface{}) interface{} {
 	}
 	attached := ss[0]
 	k := vof(attached).Kind()
-	failPOnErrWhen(k != typSLICE, "%v", fEf("PARAM_INVALID"))
+	failP1OnErrWhen(k != typSLICE, "%v", fEf("PARAM_INVALID"))
 	for _, s := range ss[1:] {
 		k = vof(s).Kind()
-		failPOnErrWhen(k != typSLICE, "%v", fEf("PARAM_INVALID"))
+		failP1OnErrWhen(k != typSLICE, "%v", fEf("PARAM_INVALID"))
 		attached = SliceAttach(attached, s, 0)
 	}
 	return attached
@@ -53,7 +53,7 @@ func CanSetCover(setA, setB interface{}) (bool, int) {
 
 	tA, tB := tof(setA), tof(setB)
 	kA, kB := tA.Kind(), tB.Kind()
-	failPOnErrWhen(kA != typSLICE || kB != typSLICE, "%v: only be [slice]", fEf("PARAM_INVALID"))
+	failP1OnErrWhen(kA != typSLICE || kB != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
 
 	vA, vB := vof(setA), vof(setB)
 	lA, lB := vA.Len(), vB.Len()
@@ -75,16 +75,13 @@ NEXT:
 	return true, -1
 }
 
-// SetIntersect :
-func SetIntersect(setA, setB interface{}) interface{} {
+// intersect :
+func intersect(setA, setB interface{}) interface{} {
 	if setA == nil || setB == nil {
 		return nil
 	}
 
-	tA, tB := tof(setA), tof(setB)
-	kA, kB := tA.Kind(), tB.Kind()
-	failPOnErrWhen(kA != typSLICE || kB != typSLICE, "%v: only be [slice]", fEf("PARAM_INVALID"))
-
+	tA := tof(setA)
 	vA, vB := vof(setA), vof(setB)
 	lA, lB := vA.Len(), vB.Len()
 	set := mkslc(tA, 0, lA)
@@ -101,8 +98,22 @@ NEXT:
 	return set.Interface()
 }
 
-// SetUnion :
-func SetUnion(setA, setB interface{}) interface{} {
+// SetIntersect :
+func SetIntersect(sets ...interface{}) interface{} {
+	if len(sets) == 0 {
+		return nil
+	}
+	itsct := sets[0]
+	failP1OnErrWhen(tof(itsct).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
+	for _, s := range sets[1:] {
+		failP1OnErrWhen(tof(s).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
+		itsct = intersect(itsct, s)
+	}
+	return itsct
+}
+
+// union :
+func union(setA, setB interface{}) interface{} {
 	switch {
 	case setA != nil && setB == nil:
 		return setA
@@ -112,15 +123,25 @@ func SetUnion(setA, setB interface{}) interface{} {
 		return nil
 	}
 
-	tA, tB := tof(setA), tof(setB)
-	kA, kB := tA.Kind(), tB.Kind()
-	failPOnErrWhen(kA != typSLICE || kB != typSLICE, "%v: only be [slice]", fEf("PARAM_INVALID"))
-
+	tA := tof(setA)
 	vA, vB := vof(setA), vof(setB)
 	set := mkslc(tA, 0, vA.Len()+vB.Len())
-	set = appendslc(set, vA)
-	set = appendslc(set, vB)
+	set = appendslc(appendslc(set, vA), vB)
 	return ToSet(set.Interface())
+}
+
+// SetUnion :
+func SetUnion(sets ...interface{}) interface{} {
+	if len(sets) == 0 {
+		return nil
+	}
+	uni := sets[0]
+	failP1OnErrWhen(tof(uni).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
+	for _, s := range sets[1:] {
+		failP1OnErrWhen(tof(s).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
+		uni = union(uni, s)
+	}
+	return uni
 }
 
 // ToSet : convert slice to set. i.e. remove duplicated items
@@ -131,7 +152,7 @@ func ToSet(slc interface{}) interface{} {
 
 	t := tof(slc)
 	k := t.Kind()
-	failPOnErrWhen(k != typSLICE, "%v: only be [slice]", fEf("PARAM_INVALID"))
+	failP1OnErrWhen(k != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
 
 	v := vof(slc)
 	l := v.Len()
@@ -164,7 +185,7 @@ func ToGeneralSlc(slc interface{}) (gslc []interface{}) {
 
 	v := vof(slc)
 	k := v.Type().Kind()
-	failPOnErrWhen(k != typSLICE, "%v: only be [slice]", fEf("PARAM_INVALID"))
+	failP1OnErrWhen(k != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
 
 	l := v.Len()
 	for i := 0; i < l; i++ {

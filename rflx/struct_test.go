@@ -37,9 +37,9 @@ func TestStruct2Map(t *testing.T) {
 	s := &struct {
 		A string
 		B int
-		C bool
+		c bool
 		F func(string) string
-	}{A: "aa", B: 22, C: false, F: func(str string) string { return str }}
+	}{A: "aa", B: 22, c: false, F: func(str string) string { return str }}
 	m := Struct2Map(s)
 	fPln(m)
 
