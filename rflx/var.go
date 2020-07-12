@@ -18,7 +18,9 @@ var (
 	fSp         = fmt.Sprint
 	fPf         = fmt.Printf
 	fPt         = fmt.Print
+	fSf         = fmt.Sprintf
 	sSplit      = strings.Split
+	sJoin       = strings.Join
 	scParseUint = strconv.ParseUint
 
 	vof       = reflect.ValueOf

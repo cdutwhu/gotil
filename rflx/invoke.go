@@ -26,65 +26,59 @@ func TryInvoke(st interface{}, name string, args ...interface{}) (rets []interfa
 	return rets, false
 }
 
-// // MustInvokeWithMW :
-// func MustInvokeWithMW(st interface{}, name string, args ...interface{}) []interface{} {
-// 	rets, ok, err := TryInvokeWithMW(st, name, args...)
-// 	FailOnErr("%v: [%s]", err, name)
-// 	FailOnErrWhen(!ok, "%v: No [%s]", eg.INTERNAL, name)
-// 	return rets
-// }
+// MustInvokeWithMW :
+func MustInvokeWithMW(st interface{}, name string, args ...interface{}) []interface{} {
+	rets, ok := TryInvokeWithMW(st, name, args...)
+	failP1OnErrWhen(!ok, "%v: No [%s]", fEf("INTERNAL"), name)
+	return rets
+}
 
-// // TryInvokeWithMW : func Name must be Exportable
-// func TryInvokeWithMW(st interface{}, name string, args ...interface{}) (rets []interface{}, ok bool) {
-// 	for k, v := range Struct2Map(st) {
-// 		// fPln(k, v)
-// 		if k == "MW" || k == "MiddleWare" || k == "MIDDLEWARE" {
-// 			if mMW, ok := v.(map[string]map[string][]interface{}); ok {
-// 			NEXTFN:
-// 				for fn, mCallerParams := range mMW {
-// 					for _, caller := range []string{name, "*"} {
-// 						if params, ok := mCallerParams[caller]; ok {
-// 							// "$1" -> args[0] etc... ; "$@" -> args string
-// 							for i, param := range params {
-// 								if paramStr, ok := param.(string); ok {
-// 									if repParam.MatchString(paramStr) {
-// 										num, err := scParseUint(paramStr[1:], 10, 64)
-// 										FailOnErr("%v", err)
-// 										FailOnErrWhen(int(num) > len(args) || int(num) < 0, "MiddleWare: %v", eg.PARAM_INVALID_INDEX)
-// 										if num == 0 {
-// 											params[i] = name
-// 										} else {
-// 											params[i] = args[num-1]
-// 										}
-// 									} else if paramStr == "$@" {
-// 										argStrs := make([]string, len(args))
-// 										for i, arg := range args {
-// 											argStrs[i] = fSf("%v", arg)
-// 										}
-// 										params[i] = sJoin(argStrs, " ")
-// 									}
-// 								}
-// 							}
-// 							_, _, err = TryInvoke(st, fn, params...)
-// 							FailOnErr("MiddleWare: %v", err)
-// 							continue NEXTFN
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return TryInvoke(st, name, args...)
-// }
+// TryInvokeWithMW : func Name must be Exportable
+func TryInvokeWithMW(st interface{}, name string, args ...interface{}) (rets []interface{}, ok bool) {
+	for k, v := range Struct2Map(st) {
+		// fPln(k, v)
+		if k == "MW" || k == "MiddleWare" || k == "MIDDLEWARE" {
+			if mMW, ok := v.(map[string]map[string][]interface{}); ok {
+			NEXTFN:
+				for fn, mCallerParams := range mMW {
+					for _, caller := range []string{name, "*"} {
+						if params, ok := mCallerParams[caller]; ok {
+							// "$1" -> args[0] etc... ; "$@" -> args string
+							for i, param := range params {
+								if paramStr, ok := param.(string); ok {
+									if repParam.MatchString(paramStr) {
+										num, err := scParseUint(paramStr[1:], 10, 64)
+										failOnErr("%v", err)
+										failOnErrWhen(int(num) > len(args) || int(num) < 0, "MiddleWare: %v", fEf("PARAM_INVALID_INDEX"))
+										if num == 0 {
+											params[i] = name
+										} else {
+											params[i] = args[num-1]
+										}
+									} else if paramStr == "$@" {
+										argStrs := make([]string, len(args))
+										for i, arg := range args {
+											argStrs[i] = fSf("%v", arg)
+										}
+										params[i] = sJoin(argStrs, " ")
+									}
+								}
+							}
+							TryInvoke(st, fn, params...)
+							continue NEXTFN
+						}
+					}
+				}
+			}
+		}
+	}
+	return TryInvoke(st, name, args...)
+}
 
-// // InvokeRst :
-// func InvokeRst(rets interface{}, idx int) (ret interface{}) {
-// 	slc, ok := rets.([]interface{})
-// 	if !ok {
-// 		return nil, eg.PARAM_INVALID
-// 	}
-// 	if idx >= len(slc) {
-// 		return nil, eg.PARAM_INVALID_INDEX
-// 	}
-// 	return slc[idx], nil
-// }
+// InvokeRst :
+func InvokeRst(rets interface{}, idx int) interface{} {
+	slc, ok := rets.([]interface{})
+	failP1OnErrWhen(!ok, "%v", fEf("PARAM_INVALID"))
+	failP1OnErrWhen(idx >= len(slc), "%v", fEf("PARAM_INVALID_INDEX"))
+	return slc[idx]
+}

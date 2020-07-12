@@ -4,7 +4,7 @@ import "testing"
 
 // Iperson :
 type Iperson interface {
-	ShowName(s1, s2 string) string
+	ShowName(s1, s2 string) (string, string)
 }
 
 type Person struct {
@@ -13,8 +13,8 @@ type Person struct {
 	Fn   func()
 }
 
-func (p *Person) ShowName(s1, s2 string) string {
-	return s1 + " P " + s2 + " P " + p.Name
+func (p *Person) ShowName(s1, s2 string) (string, string) {
+	return s1 + " P " + s2 + " P " + p.Name, "GOOD JOB"
 }
 
 func (p *Person) ShowAge(added int) int {
@@ -32,7 +32,7 @@ type Student struct {
 // }
 
 func (s *Student) ShowScore(str string) {
-	fPt(str + "   ")
+	fPt("MW: " + str + "   ")
 	fPln(s.score)
 }
 
@@ -64,18 +64,19 @@ func TestTryInvoke(t *testing.T) {
 		},
 	}
 
+	fPln(" ------------------------------------------- ")
 	ret, ok := TryInvoke(s, "ShowName", "1", "Yanlimeng")
 	fPln(ret, ok)
-
-	// Show(s)
-
-	// fPln(MustInvokeWithMW(s, "ShowName", "Great", "haohaidong"))
-
-	// results, ok, err := TryInvokeWithMW(s, "ShowName", "Great")
-	// if FailOnErr("%v", err); ok {
-	// 	Iname, err := InvRst(results, 0)
-	// 	FailOnErr("%v", err)
-	// 	name := Iname.(string)
-	// 	fPln(name)
-	// }
+	fPln(" ------------------------------------------- ")
+	Show(s)
+	fPln(" ------------------------------------------- ")
+	fPln(MustInvokeWithMW(s, "ShowName", "Great", "haohaidong"))
+	fPln(" ------------------------------------------- ")
+	results, ok := TryInvokeWithMW(s, "ShowName", "Great", "YANLIMENG")
+	if ok {
+		name := InvokeRst(results, 0).(string)
+		msg := InvokeRst(results, 1).(string)
+		fPln(name)
+		fPln(msg)
+	}
 }
