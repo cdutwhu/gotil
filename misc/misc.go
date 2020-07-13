@@ -2,11 +2,6 @@ package misc
 
 import "time"
 
-var (
-	// Exist : from debog/base
-	Exist = exist
-)
-
 // TrackTime : defer TrackTime(time.Now())
 func TrackTime(start time.Time) {
 	elapsed := time.Since(start)

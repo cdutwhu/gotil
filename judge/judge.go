@@ -4,6 +4,13 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"strconv"
+
+	"github.com/cdutwhu/debog/base"
+)
+
+var (
+	// Exist : from debog/base
+	Exist = base.Exist
 )
 
 // IsXML :

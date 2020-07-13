@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cdutwhu/debog/base"
 	"github.com/cdutwhu/debog/fn"
 	"github.com/cdutwhu/gotil/rflx"
 )
@@ -23,8 +22,6 @@ var (
 	sTrim      = strings.Trim
 	sTrimLeft  = strings.TrimLeft
 
-	rmTailFromLast  = base.RmTailFromLast
-	rmHeadToLast    = base.RmHeadToLast
 	failP1OnErrWhen = fn.FailP1OnErrWhen
 	failP1OnErr     = fn.FailP1OnErr
 	failOnErrWhen   = fn.FailOnErrWhen

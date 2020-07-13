@@ -1,13 +1,17 @@
 package str
 
-import "sort"
+import (
+	"sort"
+
+	"github.com/cdutwhu/debog/base"
+)
 
 var (
 	// RmTailFromLast : from debog/base
-	RmTailFromLast = rmTailFromLast
-
+	RmTailFromLast = base.RmTailFromLast
+	
 	// RmHeadToLast : from debog/base
-	RmHeadToLast = rmHeadToLast
+	RmHeadToLast = base.RmHeadToLast
 )
 
 // RmTailFromLastN :

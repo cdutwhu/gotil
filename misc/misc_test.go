@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-func TestExist(t *testing.T) {
-	fPln(Exist(1, 1, 2, 3))
-}
-
 func TestTrackTime(t *testing.T) {
 	defer TrackTime(time.Now())
 	time.Sleep(time.Second * time.Duration(5))

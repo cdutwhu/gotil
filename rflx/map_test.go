@@ -37,7 +37,7 @@ func TestMapKVs(t *testing.T) {
 }
 
 func TestMapsMerge(t *testing.T) {
-	mm := MapMerge(m, m1, m2)
+	mm := MapMerge(m, m1)
 	fPln(mm)
 }
 

@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cdutwhu/debog/base"
 	"github.com/cdutwhu/debog/fn"
 	"github.com/cdutwhu/gotil/judge"
 )
@@ -39,7 +38,6 @@ var (
 	typPTR    = reflect.Ptr
 	typARRAY  = reflect.Array
 
-	exist           = base.Exist
 	failPnOnErrWhen = fn.FailPnOnErrWhen
 	failPnOnErr     = fn.FailPnOnErr
 	failP1OnErrWhen = fn.FailP1OnErrWhen
@@ -47,6 +45,7 @@ var (
 	failOnErrWhen   = fn.FailOnErrWhen
 	failOnErr       = fn.FailOnErr
 	isJSON          = judge.IsJSON
+	exist           = judge.Exist
 )
 
 var (
