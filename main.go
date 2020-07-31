@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"unsafe"
 
 	"github.com/cdutwhu/debog/fn"
 	"github.com/cdutwhu/gotil/rflx"
@@ -11,7 +12,7 @@ var (
 	fPln             = fmt.Println
 	fPt              = fmt.Print
 	TryInvoke        = rflx.TryInvoke
-	MustInvokeWithMW = rflx.TryInvokeWithMW
+	MustInvokeWithMW = rflx.MustInvokeWithMW
 	TryInvokeWithMW  = rflx.TryInvokeWithMW
 	InvokeRst        = rflx.InvokeRst
 )
@@ -60,6 +61,24 @@ func Show(ip Iperson) {
 }
 
 func main() {
+
+	x := struct {
+		a bool
+		b int16
+		c []int
+	}{false, 2, []int{1, 2, 3}}
+	pb := (*int16)(unsafe.Pointer(uintptr(unsafe.Pointer(&x.a)) + unsafe.Offsetof(x.b)))
+	*pb = 42
+	fmt.Println(x.b) // "42"
+
+	arr := []int{1, 2, 3, 4, 5, 6}
+	pa := (*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&arr[0])) + unsafe.Sizeof(arr[0])))
+	*pa = 33
+	fmt.Println(arr)
+	return
+
+	// ----------------------------------------------------- //
+
 	s := &Student{
 		Person: Person{
 			Name: "HAOHAIDONG",
@@ -78,10 +97,10 @@ func main() {
 		},
 	}
 
-	fn.SetLog("./a.log")
+	fn.EnableLog2F(true, "./a.log")
 
 	fPln(" ------------------------------------------- ")
-	ret, ok := TryInvoke(s, "ShowName", "1", "Yanlimeng", "more")
+	ret, ok := TryInvoke(s, "ShowName", "1", "Yanlimeng")
 	fPln(ret, ok)
 	fPln(" ------------------------------------------- ")
 	Show(s)
@@ -95,4 +114,6 @@ func main() {
 		fPln(name)
 		fPln(msg)
 	}
+
+	fn.EnableLog2F(false, "")
 }

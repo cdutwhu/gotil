@@ -2,6 +2,7 @@ package misc
 
 import (
 	"fmt"
+	"runtime"
 
 	"github.com/cdutwhu/debog/fn"
 )
@@ -15,4 +16,8 @@ var (
 	failP1OnErr     = fn.FailP1OnErr
 	failOnErrWhen   = fn.FailOnErrWhen
 	failOnErr       = fn.FailOnErr
+)
+
+var (
+	cores = runtime.NumCPU()
 )

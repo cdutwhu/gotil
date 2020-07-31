@@ -1,6 +1,9 @@
 package misc
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 // TrackTime : defer TrackTime(time.Now())
 func TrackTime(start time.Time) {
@@ -32,4 +35,25 @@ func MatchAssign(chkCasesValues ...interface{}) interface{} {
 		}
 	}
 	return chkCasesValues[l-1]
+}
+
+// Go : Async dispatch n threads of func. Once all done, Sync then return.
+// DO NOT apply to compute with a shared variable. It is slow than normal.
+func Go(n int, f func(dim, tid int, done chan int, params ...interface{}), params ...interface{}) {
+	if n < 1 {
+		n = 1
+	}
+	wg, done := sync.WaitGroup{}, make(chan int, n)
+	wg.Add(n)
+	for i := 0; i < n; i++ {
+		go f(n, i, done, params...)
+	}
+	i := 0
+	for range done {
+		if i == n-1 {
+			close(done)
+		}
+		i++
+	}
+	wg.Done()
 }
