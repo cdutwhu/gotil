@@ -38,7 +38,8 @@ func MatchAssign(chkCasesValues ...interface{}) interface{} {
 }
 
 // Go : Async dispatch n threads of func. Once all done, Sync then return.
-// DO NOT apply to compute with a shared variable. It is slow than normal.
+// DO NOT apply to compute with a shared variable as slow than normal.
+// Start [f] implement with `defer func() { done <- tid }()`
 func Go(n int, f func(dim, tid int, done chan int, params ...interface{}), params ...interface{}) {
 	if n < 1 {
 		n = 1

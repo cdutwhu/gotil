@@ -56,3 +56,8 @@ def
 ghi`
 	fPln(IndentTxt(txt, 2, true))
 }
+
+func TestSplitRev(t *testing.T) {
+	fPln(SplitRev("a,b,c,d,e,f,g", ","))
+	fPln(SplitRev("a,b,c,d,e,f", ","))
+}

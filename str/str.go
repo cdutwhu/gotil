@@ -9,7 +9,7 @@ import (
 var (
 	// RmTailFromLast : from debog/base
 	RmTailFromLast = base.RmTailFromLast
-	
+
 	// RmHeadToLast : from debog/base
 	RmHeadToLast = base.RmHeadToLast
 )
@@ -58,6 +58,15 @@ func RmHeadToFirst(s, mark string) string {
 }
 
 // ------------------------------------------------ //
+
+// SplitRev :
+func SplitRev(s string, sep string) []string {
+	a := sSplit(s, sep)
+	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
+	}
+	return a
+}
 
 // HasAnyPrefix : [lsPrefix] at least input one prefix
 func HasAnyPrefix(s string, lsPrefix ...string) bool {

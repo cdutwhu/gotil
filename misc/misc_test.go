@@ -21,12 +21,12 @@ func TestMatchAssign(t *testing.T) {
 }
 
 func f(dim, tid int, done chan int, params ...interface{}) {
+	defer func() { done <- tid }()
 	slc := params[0].([]int)
 	L := len(slc)
 	for i := tid; i < L; i += dim {
 		time.Sleep(time.Millisecond * time.Duration(slc[i]))
 	}
-	done <- tid
 }
 
 func TestGo(t *testing.T) {
@@ -35,7 +35,7 @@ func TestGo(t *testing.T) {
 	defer TrackTime(time.Now())
 	fPln("Doing...")
 
-	// Go(1, f, delay)
+	Go(1, f, delay)
 	// Go(2, f, delay)
 	// Go(3, f, delay)
 	// Go(4, f, delay)
