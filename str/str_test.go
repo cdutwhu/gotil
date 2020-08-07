@@ -28,10 +28,10 @@ func TestRmHeadToFirst(t *testing.T) {
 }
 
 func TestStrReplByPos(t *testing.T) {
-	s := "ABC0123456789ABCDEF"
-	r := regexp.MustCompile(`^A`)
-	posGrp := r.FindAllIndex([]byte(s), -1)
-	ss := ReplByPosGrp(s, posGrp, []string{"aaa"})
+	s := "ABC0123456789ABCDEFAC"
+	r := regexp.MustCompile(`AB`)
+	posGrp := r.FindAllStringIndex(s, -1)
+	ss := ReplByPosGrp(s, posGrp, []string{"aaa"}, 0, 1)
 	fPln(ss) //         0CCC2*****BBB6789ATTTF
 }
 

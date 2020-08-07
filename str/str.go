@@ -89,11 +89,26 @@ func HasAnySuffix(s string, lsSuffix ...string) bool {
 }
 
 // ReplByPosGrp : [posGrp]-[newStrGrp] same length OR newStrGrp can only have 1 element for filling into all posGrp
-func ReplByPosGrp(s string, posGrp [][]int, newStrGrp []string) string {
+// offsetL 1 means left 1 char kept, offsetR 1 means right 1 char kept.
+// if after offsetting, no range between left & right position, then do insert.
+func ReplByPosGrp(s string, posGrp [][]int, newStrGrp []string, offsetLR ...int) string {
 	if len(posGrp) == 0 {
 		return s
 	}
 	failP1OnErrWhen(!(len(posGrp) == len(newStrGrp) || len(newStrGrp) == 1), "%v", fEf("SLICE_INCORRECT_COUNT"))
+
+	offsetL, offsetR := 0, 0
+	if len(offsetLR) == 1 {
+		offsetL = offsetLR[0]
+	}
+	if len(offsetLR) == 2 {
+		offsetL, offsetR = offsetLR[0], offsetLR[1]
+	}
+	for i := 0; i < len(posGrp); i++ {
+		posGrp[i][0] += offsetL
+		posGrp[i][1] -= offsetR
+		failP1OnErrWhen(posGrp[i][0] > posGrp[i][1], "%v", fEf("after offsetting, LEFT pos is bigger than RIGHT pos"))
+	}
 
 	wrapper := make([]struct {
 		posPair []int
