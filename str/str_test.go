@@ -61,3 +61,12 @@ func TestSplitRev(t *testing.T) {
 	fPln(SplitRev("a,b,c,d,e,f,g", ","))
 	fPln(SplitRev("a,b,c,d,e,f", ","))
 }
+
+func TestSplitLn(t *testing.T) {
+	txt := `		abc
+777
+		def`
+	for _, ln := range SplitLn(txt) {
+		fPln(ln)
+	}
+}

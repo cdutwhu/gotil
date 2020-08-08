@@ -1,6 +1,7 @@
 package str
 
 import (
+	"runtime"
 	"sort"
 
 	"github.com/cdutwhu/debog/base"
@@ -58,6 +59,12 @@ func RmHeadToFirst(s, mark string) string {
 }
 
 // ------------------------------------------------ //
+
+// SplitLn :
+func SplitLn(s string) []string {
+	sep := matchAssign(runtime.GOOS, "windows", "linux", "darwin", "\r\n", "\n", "\r", "\n")
+	return sSplit(s, sep.(string))
+}
 
 // SplitRev :
 func SplitRev(s string, sep string) []string {
