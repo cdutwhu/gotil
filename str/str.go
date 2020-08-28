@@ -227,3 +227,11 @@ func IndentTxt(str string, n int, ignore1stln bool) string {
 	}
 	return sJoin(lines, "\n")
 }
+
+// ReplAllOnAny :
+func ReplAllOnAny(s string, olds []string, new string) string {
+	for _, old := range olds {
+		s = sReplaceAll(s, old, new)
+	}
+	return s
+}

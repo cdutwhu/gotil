@@ -70,3 +70,10 @@ func TestSplitLn(t *testing.T) {
 		fPln(ln)
 	}
 }
+
+func TestReplAllOnAny(t *testing.T) {
+	s := "a/b-c.d_e"
+	fPln(s)
+	s = ReplAllOnAny(s, []string{"/", "-", ".", "_"}, " ")
+	fPln(s)
+}

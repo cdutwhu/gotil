@@ -21,6 +21,7 @@ var (
 	sLastIndex      = strings.LastIndex
 	sTrim           = strings.Trim
 	sTrimLeft       = strings.TrimLeft
+	sReplaceAll     = strings.ReplaceAll
 	failP1OnErrWhen = fn.FailP1OnErrWhen
 	failP1OnErr     = fn.FailP1OnErr
 	failOnErrWhen   = fn.FailOnErrWhen
