@@ -29,7 +29,7 @@ func SetResAlias(alias, file string) {
 }
 
 // PrintFileBytes :
-func PrintFileBytes(pkg, outmap, savepath string, save bool, files ...string) string {
+func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string) string {
 	failP1OnErrWhen(
 		!rPkgNameRule.MatchString(pkg),
 		"%v", fEf("[%s] error: Not Valid Package Name", pkg),
@@ -51,7 +51,11 @@ func PrintFileBytes(pkg, outmap, savepath string, save bool, files ...string) st
 			bytesName := rmTailFromLast(file, ".")
 			bytesName = replAllOnAny(bytesName, []string{".", "-"}, "")
 			bytesName = replAllOnAny(bytesName, []string{"/"}, "_")
-			bytesName = sTrimLeft(bytesName, " \t_") + "_" + sTrimLeft(filepath.Ext(file), ".")
+			suffix := ""
+			if keepext {
+				suffix = "_" + sTrimLeft(filepath.Ext(file), ".")
+			}
+			bytesName = sTrimLeft(bytesName, " \t_") + suffix
 			mPathAlias[fpAbs] = append([]string{}, sTitle(bytesName))
 		}
 
@@ -71,32 +75,30 @@ func PrintFileBytes(pkg, outmap, savepath string, save bool, files ...string) st
 		}
 	}
 
-	outdir := fSf("./cache/%s/", pkg)
-	if save {
-		outdir = savepath
-	} else {
-		os.RemoveAll(outdir) // delete old package
-		savepath = outdir + pkg + ".go"
-	}
 	content := fSf("package %s\n\nvar %s = map[string][]byte{\n", pkg, outmap) + sb.String() + "}\n"
 
-	// deal with `"_":`
-	old := "\"_\":"
-	for i := 0; sContains(content, old); i++ {
-		content = sReplace(content, old, fSf("\"Auto%04d\":", i), 1)
+	// deal with `"_":` & `"":`
+	I := 0
+	for _, old := range []string{`"_":`, `"":`} {
+		for sContains(content, old) {
+			content = sReplace(content, old, fSf("\"auto%04d\":", I), 1)
+			I++
+		}
 	}
 
-	mustWriteFile(savepath, []byte(content))
+	if savepath != "" {
+		mustWriteFile(savepath, []byte(content))
+	}
 	return content
 }
 
 // CreateDirBytes :
-func CreateDirBytes(pkg, outmap, dir, savepath string, save bool) {
+func CreateDirBytes(pkg, outmap, dir, savepath string, keepext bool, trimkey ...string) {
 	fdir, err := os.Open(dir)
 	failP1OnErr("%v", err)
 	dInfo, err := fdir.Stat()
 	failP1OnErr("%v", err)
-	failP1OnErrWhen(!dInfo.IsDir(), "%v", fEf("input dir is invalid directory"))
+	failP1OnErrWhen(!dInfo.IsDir(), "%v", fEf("input dir is invalid"))
 
 	resGrp := []string{}
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -109,5 +111,13 @@ func CreateDirBytes(pkg, outmap, dir, savepath string, save bool) {
 		return nil
 	})
 	failP1OnErr("%v", err)
-	PrintFileBytes(pkg, outmap, savepath, save, resGrp...)
+	resfile := PrintFileBytes(pkg, outmap, "", keepext, resGrp...)
+
+	// trim keys
+	for _, seg := range trimkey {
+		resfile = replAllOnAny(resfile, []string{`"` + seg + `_`, `_` + seg + `"`}, `"`)
+		resfile = sReplaceAll(resfile, `_`+seg+`_`, `_`)
+	}
+
+	mustWriteFile(savepath, []byte(resfile))
 }
