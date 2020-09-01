@@ -5,10 +5,11 @@ import (
 )
 
 func TestFileBytes(t *testing.T) {
-	SetResAlias("Abc", "../README.md")
-	PrintFileBytes("test", "", false, "../README.md")
+	SetResAlias("Abc", "../go.sum")
+	PrintFileBytes("embres", "MapRes", "", false, "../go.sum")
 }
 
 func TestCreateResDirBytesFile(t *testing.T) {
-	CreateResDirBytesFile("test", "../", "./aaa.go", true)
+	CreateDirBytes("embres", "MapRes", "../", "./aaa.go", true)
+	fPln(string(MapRes["Auto0002"]))
 }

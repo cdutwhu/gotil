@@ -23,17 +23,21 @@ func SetResAlias(alias, file string) {
 	fpAbs, err := filepath.Abs(file)
 	failP1OnErr("%v", err)
 
-	failP1OnErrWhen(!rNameRule.MatchString(alias), "%v", fEf("[%s] error: Must Follow Variable Naming Rule", alias))
-	warnP1OnErrWhen(unicode.IsLower(rune(alias[0])) || alias[0] == '_', "%v", fEf("[%s] is NOT Exportable for [%s]", alias, file))
-
 	_, exist := mAliasPath[alias]
 	failP1OnErrWhen(exist, "%v", fEf("alias [%s] is already used by [%s]", alias, mAliasPath[alias]))
 	mAliasPath[alias], mPathAlias[fpAbs] = fpAbs, append(mPathAlias[fpAbs], alias)
 }
 
 // PrintFileBytes :
-func PrintFileBytes(pkg, savepath string, save bool, files ...string) string {
-	failP1OnErrWhen(!rPkgNameRule.MatchString(pkg), "%v", fEf("[%s] error: Must Follow Package Naming Rule", pkg))
+func PrintFileBytes(pkg, outmap, savepath string, save bool, files ...string) string {
+	failP1OnErrWhen(
+		!rPkgNameRule.MatchString(pkg),
+		"%v", fEf("[%s] error: Not Valid Package Name", pkg),
+	)
+	failP1OnErrWhen(
+		!rNameRule.MatchString(outmap) || unicode.IsLower(rune(outmap[0])) || outmap[0] == '_',
+		"%v", fEf("[%s] error: Not Valid Exportable Variable Name", outmap),
+	)
 
 	sb := strings.Builder{}
 	for _, file := range files {
@@ -52,21 +56,18 @@ func PrintFileBytes(pkg, savepath string, save bool, files ...string) string {
 		}
 
 		for _, alias := range mPathAlias[fpAbs] {
-			failP1OnErrWhen(!rNameRule.MatchString(alias), "%v", fEf("[%s] error: Must Follow Variable Naming Rule", alias))
-
-			sb.WriteString(fSf("var %s = [...]byte{\n\t", alias))
+			sb.WriteString(fSf("\t\"%s\": []byte{\n\t\t", alias))
 			for i, v := range bytes {
 				if i > 0 {
-					if i%32 == 0 {
-						sb.WriteString(",\n\t")
+					if i%16 == 0 {
+						sb.WriteString(",\n\t\t")
 					} else {
 						sb.WriteString(", ")
 					}
 				}
-				sb.WriteString(fSf("0X%02x", v))
+				sb.WriteString(fSf("0x%02x", v))
 			}
-			sb.WriteString(",\n}")
-			sb.WriteString("\n\n")
+			sb.WriteString(",\n\t},\n")
 		}
 	}
 
@@ -77,13 +78,20 @@ func PrintFileBytes(pkg, savepath string, save bool, files ...string) string {
 		os.RemoveAll(outdir) // delete old package
 		savepath = outdir + pkg + ".go"
 	}
-	content := fSf("package %s\n\n", pkg) + sb.String()
+	content := fSf("package %s\n\nvar %s = map[string][]byte{\n", pkg, outmap) + sb.String() + "}\n"
+
+	// deal with `"_":`
+	old := "\"_\":"
+	for i := 0; sContains(content, old); i++ {
+		content = sReplace(content, old, fSf("\"Auto%04d\":", i), 1)
+	}
+
 	mustWriteFile(savepath, []byte(content))
 	return content
 }
 
-// CreateResDirBytesFile :
-func CreateResDirBytesFile(pkg, dir, savepath string, save bool) {
+// CreateDirBytes :
+func CreateDirBytes(pkg, outmap, dir, savepath string, save bool) {
 	fdir, err := os.Open(dir)
 	failP1OnErr("%v", err)
 	dInfo, err := fdir.Stat()
@@ -101,5 +109,5 @@ func CreateResDirBytesFile(pkg, dir, savepath string, save bool) {
 		return nil
 	})
 	failP1OnErr("%v", err)
-	PrintFileBytes(pkg, savepath, save, resGrp...)
+	PrintFileBytes(pkg, outmap, savepath, save, resGrp...)
 }

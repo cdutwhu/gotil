@@ -14,9 +14,11 @@ var (
 	fSpt            = fmt.Sprint
 	fSf             = fmt.Sprintf
 	fEf             = fmt.Errorf
+	sReplace        = strings.Replace
 	sReplaceAll     = strings.ReplaceAll
 	sTitle          = strings.Title
 	sTrimLeft       = strings.TrimLeft
+	sContains       = strings.Contains
 	failP1OnErr     = fn.FailP1OnErr
 	failP1OnErrWhen = fn.FailP1OnErrWhen
 	warnP1OnErrWhen = fn.WarnP1OnErrWhen
