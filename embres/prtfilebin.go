@@ -60,7 +60,7 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 		}
 
 		for _, alias := range mPathAlias[fpAbs] {
-			sb.WriteString(fSf("\t\"%s\": []byte{\n\t\t", alias))
+			sb.WriteString(fSf("\t\"%s\": {\n\t\t", alias))
 			for i, v := range bytes {
 				if i > 0 {
 					if i%16 == 0 {
@@ -75,13 +75,13 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 		}
 	}
 
-	content := fSf("package %s\n\nvar %s = map[string][]byte{\n", pkg, outmap) + sb.String() + "}\n"
+	content := fSf("package %s\n\n// %s : Auto-Created\nvar %s = map[string][]byte{\n", pkg, outmap, outmap) + sb.String() + "}\n"
 
 	// deal with `"_":` & `"":`
 	I := 0
 	for _, old := range []string{`"_":`, `"":`} {
 		for sContains(content, old) {
-			content = sReplace(content, old, fSf("\"auto%04d\":", I), 1)
+			content = sReplace(content, old, fSf("\"%04d\":", I), 1)
 			I++
 		}
 	}
