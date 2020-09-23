@@ -2,8 +2,12 @@ package net
 
 import (
 	"fmt"
+
+	"github.com/cdutwhu/debog/fn"
 )
 
 var (
-	fPln = fmt.Println
+	fSf       = fmt.Sprintf
+	fPln      = fmt.Println
+	warnOnErr = fn.WarnOnErr
 )

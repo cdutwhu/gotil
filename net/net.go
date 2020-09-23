@@ -1,20 +1,16 @@
 package net
 
-import "net"
+import (
+	"net"
+)
 
-// LocalIP returns the non loopback local IP of the host
+// LocalIP : Get preferred outbound ip of this machine
 func LocalIP() string {
-	addrs, err := net.InterfaceAddrs()
-	if err != nil {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if warnOnErr("%v", err) != nil {
 		return ""
 	}
-	for _, address := range addrs {
-		// check the address type and if it is not a loopback the display it
-		if ipNet, ok := address.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
-			if ipNet.IP.To4() != nil {
-				return ipNet.IP.String()
-			}
-		}
-	}
-	return ""
+	defer conn.Close()
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	return fSf("%v", localAddr.IP)
 }

@@ -5,6 +5,7 @@ import (
 	"unsafe"
 
 	"github.com/cdutwhu/debog/fn"
+	"github.com/cdutwhu/gotil/net"
 	"github.com/cdutwhu/gotil/rflx"
 )
 
@@ -61,6 +62,10 @@ func Show(ip Iperson) {
 }
 
 func main() {
+
+	fPln(net.LocalIP())
+
+	return
 
 	x := struct {
 		a bool
