@@ -77,3 +77,24 @@ func TestReplAllOnAny(t *testing.T) {
 	s = ReplAllOnAny(s, []string{"/", "-", ".", "_"}, " ")
 	fPln(s)
 }
+
+func TestExtend(t *testing.T) {
+	s := "abcdefgABChijklmnABC"
+	ss := sSplit(s, "ABC")
+	for i, each := range ss {
+		if i > 0 {
+			each = Extend(each, 1, 1)
+		}
+		fPln(each)
+	}
+
+	s = "abcdefghijklmn"
+	s = s[2:4]
+	fPln(s)
+	s = Extend(s, 1, 5)
+	fPln(s)
+	// s = Extend(s, 1, 1)
+	// fPln(s)
+	// s = Extend(s, 1, 2)
+	// fPln(s[1:5])
+}

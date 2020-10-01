@@ -1,8 +1,10 @@
 package str
 
 import (
+	"reflect"
 	"runtime"
 	"sort"
+	"unsafe"
 
 	"github.com/cdutwhu/debog/base"
 )
@@ -232,6 +234,22 @@ func IndentTxt(str string, n int, ignore1stln bool) string {
 func ReplAllOnAny(s string, olds []string, new string) string {
 	for _, old := range olds {
 		s = sReplaceAll(s, old, new)
+	}
+	return s
+}
+
+// Extend : 
+func Extend(s string, offsetL, offsetR int) string {
+	if offsetL < 0 {
+		offsetL = -offsetL
+	}
+	sh := (*reflect.SliceHeader)(unsafe.Pointer(&s))
+	for i := offsetL; i > 0; i-- {
+		sh.Data--
+	}
+	sh.Len += (offsetL + offsetR)
+	if sh.Cap < sh.Len {
+		sh.Cap = sh.Len
 	}
 	return s
 }
