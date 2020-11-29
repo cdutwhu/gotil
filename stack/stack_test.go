@@ -3,7 +3,7 @@ package stack
 import "testing"
 
 func TestStack(t *testing.T) {
-	var s4s stack
+	var s4s Stack
 	s4s.push("abc")
 	s4s.push("def")
 	s4s.push("ghi")

@@ -1,8 +1,9 @@
 package stack
 
-type stack []interface{}
+// Stack :
+type Stack []interface{}
 
-func (stk *stack) push(items ...interface{}) (n int) {
+func (stk *Stack) push(items ...interface{}) (n int) {
 	for i, s := range items {
 		*stk = append(*stk, s)
 		n = i
@@ -10,11 +11,11 @@ func (stk *stack) push(items ...interface{}) (n int) {
 	return n + 1
 }
 
-func (stk *stack) len() int {
+func (stk *Stack) len() int {
 	return len(*stk)
 }
 
-func (stk *stack) pop() (interface{}, bool) {
+func (stk *Stack) pop() (interface{}, bool) {
 	if stk.len() > 0 {
 		last := (*stk)[stk.len()-1]
 		*stk = (*stk)[:stk.len()-1]
@@ -23,20 +24,20 @@ func (stk *stack) pop() (interface{}, bool) {
 	return nil, false
 }
 
-func (stk *stack) peek() (interface{}, bool) {
+func (stk *Stack) peek() (interface{}, bool) {
 	if stk.len() > 0 {
 		return (*stk)[stk.len()-1], true
 	}
 	return nil, false
 }
 
-func (stk *stack) clear() (n int) {
+func (stk *Stack) clear() (n int) {
 	n = stk.len()
-	stk = &stack{}
+	stk = &Stack{}
 	return n
 }
 
-func (stk *stack) sprint(sep string) string {
+func (stk *Stack) sprint(sep string) string {
 	sb := sBuilder{}
 	for _, ele := range *stk {
 		sb.WriteString(fSf("%v", ele))
