@@ -3,7 +3,8 @@ package stack
 // Stack :
 type Stack []interface{}
 
-func (stk *Stack) push(items ...interface{}) (n int) {
+// Push :
+func (stk *Stack) Push(items ...interface{}) (n int) {
 	for i, s := range items {
 		*stk = append(*stk, s)
 		n = i
@@ -15,7 +16,13 @@ func (stk *Stack) len() int {
 	return len(*stk)
 }
 
-func (stk *Stack) pop() (interface{}, bool) {
+// Len :
+func (stk *Stack) Len() int {
+	return len(*stk)
+}
+
+// Pop :
+func (stk *Stack) Pop() (interface{}, bool) {
 	if stk.len() > 0 {
 		last := (*stk)[stk.len()-1]
 		*stk = (*stk)[:stk.len()-1]
@@ -24,20 +31,23 @@ func (stk *Stack) pop() (interface{}, bool) {
 	return nil, false
 }
 
-func (stk *Stack) peek() (interface{}, bool) {
+// Peek :
+func (stk *Stack) Peek() (interface{}, bool) {
 	if stk.len() > 0 {
 		return (*stk)[stk.len()-1], true
 	}
 	return nil, false
 }
 
-func (stk *Stack) clear() (n int) {
+// Clear :
+func (stk *Stack) Clear() (n int) {
 	n = stk.len()
 	stk = &Stack{}
 	return n
 }
 
-func (stk *Stack) sprint(sep string) string {
+// Sprint :
+func (stk *Stack) Sprint(sep string) string {
 	sb := sBuilder{}
 	for _, ele := range *stk {
 		sb.WriteString(fSf("%v", ele))
