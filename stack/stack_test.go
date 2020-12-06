@@ -7,6 +7,9 @@ func TestStack(t *testing.T) {
 	s4s.Push("abc")
 	s4s.Push("def")
 	s4s.Push("ghi")
+	s4s.Push("jkl")
+
+	tmp := s4s.Copy()
 
 	fPln(s4s.Sprint("-"))
 
@@ -26,4 +29,6 @@ func TestStack(t *testing.T) {
 	val, ok = s4s.Pop()
 	fPln(val, ok, s4s)
 	fPln(s4s.Sprint("-"))
+
+	fPln(tmp.Sprint("/"))
 }

@@ -46,6 +46,14 @@ func (stk *Stack) Clear() (n int) {
 	return n
 }
 
+// Copy :
+func (stk *Stack) Copy() *Stack {
+	tmp := make([]interface{}, stk.len())
+	copy(tmp, *stk)
+	tmpStk := Stack(tmp)
+	return &tmpStk
+}
+
 // Sprint :
 func (stk *Stack) Sprint(sep string) string {
 	sb := sBuilder{}
