@@ -13,6 +13,7 @@ func TestStack(t *testing.T) {
 
 	fPln(s4s.Sprint("-"))
 
+	s4s, _ = s4s.Clear()
 	val, ok := s4s.Pop()
 	fPln(val, ok, s4s, s4s.Sprint("-"))
 

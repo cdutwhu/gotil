@@ -37,18 +37,15 @@ func (q *Queue) Peek() (interface{}, bool) {
 }
 
 // Clear :
-func (q *Queue) Clear() (n int) {
-	n = q.len()
-	q = &Queue{}
-	return n
+func (q *Queue) Clear() (Queue, int) {
+	return Queue{}, q.len()
 }
 
 // Copy :
-func (q *Queue) Copy() *Queue {
+func (q *Queue) Copy() Queue {
 	tmp := make([]interface{}, q.len())
 	copy(tmp, *q)
-	tmpQueue := Queue(tmp)
-	return &tmpQueue
+	return Queue(tmp)
 }
 
 // Sprint :

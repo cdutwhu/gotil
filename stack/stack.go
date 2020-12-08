@@ -37,18 +37,15 @@ func (stk *Stack) Peek() (interface{}, bool) {
 }
 
 // Clear :
-func (stk *Stack) Clear() (n int) {
-	n = stk.len()
-	stk = &Stack{}
-	return n
+func (stk *Stack) Clear() (Stack, int) {
+	return Stack{}, stk.len()
 }
 
 // Copy :
-func (stk *Stack) Copy() *Stack {
+func (stk *Stack) Copy() Stack {
 	tmp := make([]interface{}, stk.len())
 	copy(tmp, *stk)
-	tmpStk := Stack(tmp)
-	return &tmpStk
+	return Stack(tmp)
 }
 
 // Sprint :

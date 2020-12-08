@@ -9,10 +9,13 @@ func TestQueue(t *testing.T) {
 	q4s.Enqueue("ghi")
 	q4s.Enqueue("jkl")
 
+	fPln(q4s, q4s.Sprint("-"))
+
 	tmp := q4s.Copy()
+	
+	q4s, _ = q4s.Clear()
 
 	fPln(q4s.Sprint("-"))
-	fPln("-------------")
 
 	val, ok := q4s.Dequeue()
 	fPln(val, ok, q4s, q4s.Sprint("-"))
