@@ -5,11 +5,8 @@ type Stack []interface{}
 
 // Push :
 func (stk *Stack) Push(items ...interface{}) (n int) {
-	for i, s := range items {
-		*stk = append(*stk, s)
-		n = i
-	}
-	return n + 1
+	*stk = append(*stk, items...)
+	return len(items)
 }
 
 func (stk *Stack) len() int {

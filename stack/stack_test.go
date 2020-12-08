@@ -14,21 +14,25 @@ func TestStack(t *testing.T) {
 	fPln(s4s.Sprint("-"))
 
 	val, ok := s4s.Pop()
-	fPln(val, ok, s4s)
-	fPln(s4s.Sprint("-"))
+	fPln(val, ok, s4s, s4s.Sprint("-"))
 
 	val, ok = s4s.Pop()
-	s4s.Push("jkl")
-	fPln(val, ok, s4s)
-	fPln(s4s.Sprint("-"))
+	fPln(val, ok, s4s, s4s.Sprint("-"))
+
+	s4s.Push("***")
+	fPln(s4s, s4s.Sprint("-"))
 
 	val, ok = s4s.Pop()
-	fPln(val, ok, s4s)
-	fPln(s4s.Sprint("-"))
+	fPln(val, ok, s4s, s4s.Sprint("-"))
 
 	val, ok = s4s.Pop()
-	fPln(val, ok, s4s)
-	fPln(s4s.Sprint("-"))
+	fPln(val, ok, s4s, s4s.Sprint("-"))
+
+	val, ok = s4s.Pop()
+	fPln(val, ok, s4s, s4s.Sprint("-"))
+
+	val, ok = s4s.Pop()
+	fPln(val, ok, s4s, s4s.Sprint("-"))
 
 	fPln(tmp.Sprint("/"))
 }
