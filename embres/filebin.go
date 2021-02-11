@@ -16,8 +16,8 @@ var (
 	rPkgNameRule = regexp.MustCompile(`^[a-z][a-z0-9]*$`)
 )
 
-// SetResAlias :
-func SetResAlias(alias, file string) {
+// SetResAliasAsKey :
+func SetResAliasAsKey(alias, file string) {
 	_, err := os.Stat(file)
 	failP1OnErr("%v", err)
 	fpAbs, err := filepath.Abs(file)
@@ -44,9 +44,6 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 		fpAbs, err := filepath.Abs(file)
 		failP1OnErr("%v", err)
 
-		bytes, err := ioutil.ReadFile(file)
-		failP1OnErr("%v", err)
-
 		if _, exist := mPathAlias[fpAbs]; !exist {
 			bytesName := rmTailFromLast(file, ".")
 			bytesName = replAllOnAny(bytesName, []string{".", "-"}, "")
@@ -58,6 +55,9 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 			bytesName = sTrimLeft(bytesName, " \t_") + suffix
 			mPathAlias[fpAbs] = append([]string{}, sTitle(bytesName))
 		}
+
+		bytes, err := ioutil.ReadFile(file)
+		failP1OnErr("%v", err)
 
 		for _, alias := range mPathAlias[fpAbs] {
 			sb.WriteString(fSf("\t\"%s\": {\n\t\t", alias))
@@ -75,7 +75,7 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 		}
 	}
 
-	content := fSf("package %s\n\n// %s : Auto-Created\nvar %s = map[string][]byte{\n", pkg, outmap, outmap) + sb.String() + "}\n"
+	content := fSf("package %s\n\n// %s : auto-generated\nvar %s = map[string][]byte{\n%s}\n", pkg, outmap, outmap, sb.String())
 
 	// deal with `"_":` & `"":`
 	I := 0
@@ -87,16 +87,17 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 	}
 
 	if savepath != "" {
+		savepath = sTrimSuffix(savepath, ".go") + ".go"
 		mustWriteFile(savepath, []byte(content))
 	}
 	return content
 }
 
-// CreateDirBytes :
-func CreateDirBytes(pkg, outmap, dir, savepath string, keepext bool, trimkey ...string) {
-	fdir, err := os.Open(dir)
+// GenerateDirBytes :
+func GenerateDirBytes(pkg, outmap, dir, savepath string, keepext bool, trimkey ...string) string {
+	fDir, err := os.Open(dir)
 	failP1OnErr("%v", err)
-	dInfo, err := fdir.Stat()
+	dInfo, err := fDir.Stat()
 	failP1OnErr("%v", err)
 	failP1OnErrWhen(!dInfo.IsDir(), "%v", fEf("input dir is invalid"))
 
@@ -119,5 +120,10 @@ func CreateDirBytes(pkg, outmap, dir, savepath string, keepext bool, trimkey ...
 		resfile = sReplaceAll(resfile, `_`+seg+`_`, `_`)
 	}
 
-	mustWriteFile(savepath, []byte(resfile))
+	if savepath != "" {
+		savepath = sTrimSuffix(savepath, ".go") + ".go"
+		mustWriteFile(savepath, []byte(resfile))
+	}
+
+	return resfile
 }

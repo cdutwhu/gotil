@@ -15,8 +15,8 @@ var (
 	MustAppendFile = base.MustAppendFile
 )
 
-// ExtractFileContent :
-func ExtractFileContent(filepath string, f func(line string) (bool, string), outfile string) (string, error) {
+// EditFileByLine :
+func EditFileByLine(filepath string, f func(line string) (bool, string), outfile string) (string, error) {
 	file, err := os.Open(filepath)
 	if err != nil {
 		return "", err

@@ -17,8 +17,11 @@ var (
 	sReplace        = strings.Replace
 	sReplaceAll     = strings.ReplaceAll
 	sTitle          = strings.Title
+	sTrim           = strings.Trim
 	sTrimLeft       = strings.TrimLeft
+	sTrimSuffix     = strings.TrimSuffix
 	sContains       = strings.Contains
+	failOnErr       = fn.FailOnErr
 	failP1OnErr     = fn.FailP1OnErr
 	failP1OnErrWhen = fn.FailP1OnErrWhen
 	warnP1OnErrWhen = fn.WarnP1OnErrWhen
