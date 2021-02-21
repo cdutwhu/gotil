@@ -1,7 +1,6 @@
 package embres
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -56,7 +55,7 @@ func PrintFileBytes(pkg, outmap, savepath string, keepext bool, files ...string)
 			mPathAlias[fpAbs] = append([]string{}, sTitle(bytesName))
 		}
 
-		bytes, err := ioutil.ReadFile(file)
+		bytes, err := os.ReadFile(file)
 		failP1OnErr("%v", err)
 
 		for _, alias := range mPathAlias[fpAbs] {
