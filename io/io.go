@@ -2,7 +2,9 @@ package io
 
 import (
 	"bufio"
+	"io"
 	"os"
+	"strings"
 
 	"github.com/cdutwhu/debog/base"
 )
@@ -15,15 +17,10 @@ var (
 	MustAppendFile = base.MustAppendFile
 )
 
-// EditFileByLine :
-func EditFileByLine(filepath string, f func(line string) (bool, string), outfile string) (string, error) {
-	file, err := os.Open(filepath)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
+// readByLine :
+func readByLine(r io.Reader, f func(line string) (bool, string), outfile string) (string, error) {
 	lines := []string{}
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		if ok, line := f(scanner.Text()); ok {
 			lines = append(lines, line)
@@ -37,4 +34,19 @@ func EditFileByLine(filepath string, f func(line string) (bool, string), outfile
 		MustWriteFile(outfile, []byte(content))
 	}
 	return content, nil
+}
+
+// EditFileByLine :
+func EditFileByLine(filepath string, f func(line string) (bool, string), outfile string) (string, error) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+	return readByLine(file, f, outfile)
+}
+
+// EditStrByLine :
+func EditStrByLine(str string, f func(line string) (bool, string), outfile string) (string, error) {
+	return readByLine(strings.NewReader(str), f, outfile)
 }
