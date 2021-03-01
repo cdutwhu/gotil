@@ -17,7 +17,7 @@ func SliceAttach(s1, s2 interface{}, pos int) interface{} {
 			return s1
 		}
 		lm := int(math.Max(float64(l1), float64(l2+pos)))
-		v := appendslc(v1.Slice(0, pos), v2)
+		v := appendSlc(v1.Slice(0, pos), v2)
 		return v.Slice(0, lm).Interface()
 	}
 	if l1 > 0 && l2 == 0 {
@@ -84,13 +84,13 @@ func intersect(setA, setB interface{}) interface{} {
 	tA := tof(setA)
 	vA, vB := vof(setA), vof(setB)
 	lA, lB := vA.Len(), vB.Len()
-	set := mkslc(tA, 0, lA)
+	set := mkSlc(tA, 0, lA)
 NEXT:
 	for j := 0; j < lB; j++ {
 		b := vB.Index(j)
 		for i := 0; i < lA; i++ {
 			if deepEqual(b.Interface(), vA.Index(i).Interface()) {
-				set = appendx(set, b)
+				set = appendX(set, b)
 				continue NEXT
 			}
 		}
@@ -103,13 +103,13 @@ func SetIntersect(sets ...interface{}) interface{} {
 	if len(sets) == 0 {
 		return nil
 	}
-	itsct := sets[0]
-	failP1OnErrWhen(tof(itsct).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
+	intersection := sets[0]
+	failP1OnErrWhen(tof(intersection).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
 	for _, s := range sets[1:] {
 		failP1OnErrWhen(tof(s).Kind() != typSLICE, "%v: need [slice]", fEf("PARAM_INVALID"))
-		itsct = intersect(itsct, s)
+		intersection = intersect(intersection, s)
 	}
-	return itsct
+	return intersection
 }
 
 // union :
@@ -125,8 +125,8 @@ func union(setA, setB interface{}) interface{} {
 
 	tA := tof(setA)
 	vA, vB := vof(setA), vof(setB)
-	set := mkslc(tA, 0, vA.Len()+vB.Len())
-	set = appendslc(appendslc(set, vA), vB)
+	set := mkSlc(tA, 0, vA.Len()+vB.Len())
+	set = appendSlc(appendSlc(set, vA), vB)
 	return ToSet(set.Interface())
 }
 
@@ -160,8 +160,8 @@ func ToSet(slc interface{}) interface{} {
 		return slc
 	}
 
-	set := mkslc(t, 0, l)
-	set = appendx(set, v.Index(0))
+	set := mkSlc(t, 0, l)
+	set = appendX(set, v.Index(0))
 NEXT:
 	for i := 1; i < l; i++ {
 		vItem := v.Index(i)
@@ -170,7 +170,7 @@ NEXT:
 				continue NEXT
 			}
 			if j == set.Len()-1 { // if vItem falls down to the last set position, which means set doesn't have this item, then add it.
-				set = appendx(set, vItem)
+				set = appendX(set, vItem)
 			}
 		}
 	}
@@ -178,7 +178,7 @@ NEXT:
 }
 
 // ToGeneralSlc :
-func ToGeneralSlc(slc interface{}) (gslc []interface{}) {
+func ToGeneralSlc(slc interface{}) (gSlc []interface{}) {
 	if slc == nil {
 		return nil
 	}
@@ -189,7 +189,7 @@ func ToGeneralSlc(slc interface{}) (gslc []interface{}) {
 
 	l := v.Len()
 	for i := 0; i < l; i++ {
-		gslc = append(gslc, v.Index(i).Interface())
+		gSlc = append(gSlc, v.Index(i).Interface())
 	}
 	return
 }

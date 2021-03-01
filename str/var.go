@@ -26,6 +26,6 @@ var (
 	failP1OnErr     = fn.FailP1OnErr
 	failOnErrWhen   = fn.FailOnErrWhen
 	failOnErr       = fn.FailOnErr
-	toSet           = rflx.ToSet
+	cvtToSet        = rflx.ToSet
 	matchAssign     = misc.MatchAssign
 )

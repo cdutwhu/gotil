@@ -31,16 +31,16 @@ func TestTaskPool(t *testing.T) {
 		return fmt.Errorf("error test")
 	}
 
-	tpool := NewTaskPool(8)
-	tpool.AsyncTask(1, f1)
-	tpool.AsyncTask(2, f)
-	tpool.AsyncTask(3, f)
-	tpool.AsyncTask(4, f)
-	tpool.AsyncTask(5, f)
-	tpool.AsyncTask(6, f)
-	tpool.AsyncTask(7, f)
-	tpool.AsyncTask(8, f1)
-	for i, e := range tpool.Wait() {
+	tPool := NewTaskPool(8)
+	tPool.AsyncTask(1, f1)
+	tPool.AsyncTask(2, f)
+	tPool.AsyncTask(3, f)
+	tPool.AsyncTask(4, f)
+	tPool.AsyncTask(5, f)
+	tPool.AsyncTask(6, f)
+	tPool.AsyncTask(7, f)
+	tPool.AsyncTask(8, f1)
+	for i, e := range tPool.Wait() {
 		fmt.Println(i, e)
 	}
 }

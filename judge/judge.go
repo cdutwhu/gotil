@@ -11,6 +11,8 @@ import (
 var (
 	// Exist : from debog/base
 	Exist = base.Exist
+	// NotExist : from debog/base
+	NotExist = base.NotExist
 )
 
 // IsXML :

@@ -26,10 +26,10 @@ var (
 	tof       = reflect.TypeOf
 	sof       = reflect.SliceOf
 	mof       = reflect.MapOf
-	mkslc     = reflect.MakeSlice
-	appendslc = reflect.AppendSlice
-	appendx   = reflect.Append
-	mkmap     = reflect.MakeMap
+	mkSlc     = reflect.MakeSlice
+	appendSlc = reflect.AppendSlice
+	appendX   = reflect.Append
+	mkMap     = reflect.MakeMap
 	deepEqual = reflect.DeepEqual
 
 	typMAP    = reflect.Map

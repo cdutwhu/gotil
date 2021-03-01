@@ -13,7 +13,7 @@ func MapKeys(m interface{}) interface{} {
 	keys := v.MapKeys()
 	if L := len(keys); L > 0 {
 		kType := tof(keys[0].Interface())
-		rstValue := mkslc(sof(kType), L, L)
+		rstValue := mkSlc(sof(kType), L, L)
 		for i, k := range keys {
 			rstValue.Index(i).Set(vof(k.Interface()))
 		}
@@ -40,9 +40,9 @@ func MapKVs(m interface{}) (interface{}, interface{}) {
 	keys := v.MapKeys()
 	if L := len(keys); L > 0 {
 		kType := tof(keys[0].Interface())
-		kRst := mkslc(sof(kType), L, L)
+		kRst := mkSlc(sof(kType), L, L)
 		vType := tof(v.MapIndex(keys[0]).Interface())
-		vRst := mkslc(sof(vType), L, L)
+		vRst := mkSlc(sof(vType), L, L)
 		for i, k := range keys {
 			kRst.Index(i).Set(vof(k.Interface()))
 			vRst.Index(i).Set(vof(v.MapIndex(k).Interface()))
@@ -74,7 +74,7 @@ func mapJoin(m1, m2 interface{}) (interface{}, error) {
 			return nil, fEf("MAPS_DIF_VALUE_TYPE")
 		}
 
-		aMap := mkmap(mof(k1Type, v1Type))
+		aMap := mkMap(mof(k1Type, v1Type))
 		for _, k := range keys1 {
 			aMap.SetMapIndex(vof(k.Interface()), vof(v1.MapIndex(k).Interface()))
 		}

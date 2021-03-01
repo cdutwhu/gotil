@@ -165,7 +165,7 @@ func ReplByPosGrp(s string, posGrp [][]int, newStrGrp []string, offsetLR ...int)
 }
 
 // Transpose :
-func Transpose(strlist []string, sep, trimToL, trimFromR string, toset bool) [][]string {
+func Transpose(strlist []string, sep, trimToL, trimFromR string, toSet bool) [][]string {
 	nSep := 0
 	for _, str := range strlist {
 		if n := sCount(str, sep); n > nSep {
@@ -188,21 +188,21 @@ func Transpose(strlist []string, sep, trimToL, trimFromR string, toset bool) [][
 			rtStrList[i] = append(rtStrList[i], s)
 		}
 	}
-	if toset {
+	if toSet {
 		for i := 0; i < len(rtStrList); i++ {
-			rtStrList[i] = toSet(rtStrList[i]).([]string)
+			rtStrList[i] = cvtToSet(rtStrList[i]).([]string)
 		}
 	}
 	return rtStrList
 }
 
 // IndentTxt :
-func IndentTxt(str string, n int, ignore1stln bool) string {
+func IndentTxt(str string, n int, ignore1stLn bool) string {
 	if n == 0 {
 		return str
 	}
 	S := 0
-	if ignore1stln {
+	if ignore1stLn {
 		S = 1
 	}
 	lines := sSplit(str, "\n")

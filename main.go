@@ -18,25 +18,29 @@ var (
 	InvokeRst        = rflx.InvokeRst
 )
 
-// Iperson :
-type Iperson interface {
+// IPerson :
+type IPerson interface {
 	ShowName(s1, s2 string) (string, string)
 }
 
+// Person :
 type Person struct {
 	Name string
 	Age  int
 	Fn   func()
 }
 
+// ShowName :
 func (p *Person) ShowName(s1, s2 string) (string, string) {
 	return s1 + " P " + s2 + " P " + p.Name, "GOOD JOB"
 }
 
+// ShowAge :
 func (p *Person) ShowAge(added int) int {
 	return p.Age + added
 }
 
+// Student :
 type Student struct {
 	Person
 	score int
@@ -47,17 +51,19 @@ type Student struct {
 // 	return s1 + " S " + s2 + " S " + s.Name
 // }
 
+// ShowScore :
 func (s *Student) ShowScore(str string) {
 	fPt("MW: " + str + "   ")
 	fPln(s.score)
 }
 
+// AddScore :
 func (s *Student) AddScore(added int) {
 	fPln(s.score + added)
 }
 
 // Show :
-func Show(ip Iperson) {
+func Show(ip IPerson) {
 	fPln(ip.ShowName("hello", "world"))
 }
 
@@ -65,7 +71,7 @@ func main() {
 
 	fPln(net.LocalIP())
 
-	return
+	// return
 
 	x := struct {
 		a bool
@@ -80,7 +86,8 @@ func main() {
 	pa := (*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&arr[0])) + unsafe.Sizeof(arr[0])))
 	*pa = 33
 	fmt.Println(arr)
-	return
+	
+	// return
 
 	// ----------------------------------------------------- //
 

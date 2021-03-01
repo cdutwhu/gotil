@@ -2,8 +2,8 @@ package rflx
 
 import "testing"
 
-// Iperson :
-type Iperson interface {
+// IPerson :
+type IPerson interface {
 	ShowName(s1, s2 string) (string, string)
 }
 
@@ -41,7 +41,7 @@ func (s *Student) AddScore(added int) {
 }
 
 // Show :
-func Show(ip Iperson) {
+func Show(ip IPerson) {
 	fPln(ip.ShowName("hello", "world"))
 }
 

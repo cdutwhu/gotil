@@ -56,11 +56,11 @@ func TryInvokeWithMW(st interface{}, name string, args ...interface{}) (rets []i
 											params[i] = args[num-1]
 										}
 									} else if paramStr == "$@" {
-										argStrs := make([]string, len(args))
+										argStrGrp := make([]string, len(args))
 										for i, arg := range args {
-											argStrs[i] = fSf("%v", arg)
+											argStrGrp[i] = fSf("%v", arg)
 										}
-										params[i] = sJoin(argStrs, " ")
+										params[i] = sJoin(argStrGrp, " ")
 									}
 								}
 							}

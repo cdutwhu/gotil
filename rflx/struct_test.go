@@ -16,8 +16,8 @@ func TestStruct2Env(t *testing.T) {
 
 	user1 := &User{}
 	fPf("%+v\n", *user1)
-	Iuser2 := Env2Struct("MyUser", &User{})
-	user2 := Iuser2.(*User)
+	IUser2 := Env2Struct("MyUser", &User{})
+	user2 := IUser2.(*User)
 	fPf("%+v\n", *user2)
 
 	fPln("New Age: ", user2.Age+5)
@@ -26,8 +26,8 @@ func TestStruct2Env(t *testing.T) {
 func TestEnv2Struct(t *testing.T) {
 	user1 := &User{}
 	fPf("%+v\n", *user1)
-	Iuser2 := Env2Struct("MyUser", &User{})
-	user2 := Iuser2.(*User)
+	IUser2 := Env2Struct("MyUser", &User{})
+	user2 := IUser2.(*User)
 	fPf("%+v\n", *user2)
 
 	fPln("New Age: ", user2.Age+5)
@@ -71,6 +71,5 @@ func TestStructFields(t *testing.T) {
 		c  bool
 		Fn func(string) string
 	}{A: "aa", B: 22, c: false, Fn: func(str string) string { return str }}
-	flds := StructFields(s)
-	fPln(flds)
+	fPln(StructFields(s))
 }
