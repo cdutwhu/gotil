@@ -1,12 +1,13 @@
 package iter
 
-// N : for i := range N()
+// N : for i := range N(n)
 func N(n int) []struct{} {
 	return make([]struct{}, n)
 }
 
-// Iter : for i := range Iter()
+// Iter : for i := range Iter(end)/(start,end)/(start,step,end) 
 func Iter(params ...int) <-chan int {
+
 	start, end, step := 0, 0, 1
 	switch len(params) {
 	case 1:
@@ -16,22 +17,37 @@ func Iter(params ...int) <-chan int {
 	case 3:
 		start, step, end = params[0], params[1], params[2]
 	default:
-		failP1OnErr("%v: params' count is 1, 2, or 3", fEf("PARAM_INVALID"))
-	}
-	if end <= start {
-		failP1OnErr("%v: [end](%d) must be greater than [start](%d)", fEf("PARAM_INVALID"), end, start)
-	}
-	if step < 1 {
-		failP1OnErr("%v: [step](%d) must be greater than 0", fEf("PARAM_INVALID"), step)
+		failP1OnErr("%v: params' count only can be 1, 2 or 3", fEf("PARAM_INVALID"))
 	}
 
 	ch := make(chan int)
-	go func() {
-		defer close(ch)
-		for i := start; i < end; i += step {
-			ch <- i
+
+	if start > end {
+
+		switch len(params) {
+		case 1, 2:
+			step = -1
 		}
-	}()
+
+		failP1OnErrWhen(step >= 0, "%v", fEf("step error, must be NEGATIVE"))
+		go func() {
+			defer close(ch)
+			for i := start; i > end; i += step {
+				ch <- i
+			}
+		}()
+
+	} else {
+
+		failP1OnErrWhen(step <= 0, "%v", fEf("step error, must be POSITIVE"))
+		go func() {
+			defer close(ch)
+			for i := start; i < end; i += step {
+				ch <- i
+			}
+		}()
+	}
+
 	return ch
 }
 
