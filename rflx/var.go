@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/cdutwhu/debog/fn"
+	"github.com/cdutwhu/gotil"
 	"github.com/cdutwhu/gotil/judge"
 )
 
@@ -45,7 +46,7 @@ var (
 	failOnErrWhen   = fn.FailOnErrWhen
 	failOnErr       = fn.FailOnErr
 	isJSON          = judge.IsJSON
-	exist           = judge.Exist
+	exist           = gotil.Exist
 )
 
 var (
