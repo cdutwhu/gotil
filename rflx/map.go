@@ -1,6 +1,7 @@
 package rflx
 
 import (
+	"reflect"
 	"regexp"
 	"sort"
 )
@@ -8,7 +9,7 @@ import (
 // MapKeys : only apply to single type key
 func MapKeys(m interface{}) interface{} {
 	v := vof(m)
-	failP1OnErrWhen(v.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
+	failP1OnErrWhen(v.Kind() != reflect.Map, "%v", fEf("PARAM_INVALID_MAP"))
 
 	keys := v.MapKeys()
 	if L := len(keys); L > 0 {
@@ -35,7 +36,7 @@ func MapKeys(m interface{}) interface{} {
 // MapKVs : only apply to single type key and single type value
 func MapKVs(m interface{}) (interface{}, interface{}) {
 	v := vof(m)
-	failP1OnErrWhen(v.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
+	failP1OnErrWhen(v.Kind() != reflect.Map, "%v", fEf("PARAM_INVALID_MAP"))
 
 	keys := v.MapKeys()
 	if L := len(keys); L > 0 {
@@ -55,8 +56,8 @@ func MapKVs(m interface{}) (interface{}, interface{}) {
 // mapJoin : overwritted by the 2nd params
 func mapJoin(m1, m2 interface{}) (interface{}, error) {
 	v1, v2 := vof(m1), vof(m2)
-	// failP1OnErrWhen(v1.Kind() != typMAP || v2.Kind() != typMAP, "%v", fEf("PARAM_INVALID_MAP"))
-	if v1.Kind() != typMAP || v2.Kind() != typMAP {
+	// failP1OnErrWhen(v1.Kind() != reflect.Map || v2.Kind() != reflect.Map, "%v", fEf("PARAM_INVALID_MAP"))
+	if v1.Kind() != reflect.Map || v2.Kind() != reflect.Map {
 		return nil, fEf("PARAM_INVALID_MAP")
 	}
 

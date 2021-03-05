@@ -11,7 +11,7 @@ func TryInvoke(st interface{}, name string, args ...interface{}) (rets []interfa
 	}()
 
 	stVal := vof(st)
-	failP1OnErrWhen(stVal.Kind() != typPTR || stVal.Elem().Kind() != typSTRUCT, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
+	failP1OnErrWhen(stVal.Kind() != reflect.Ptr || stVal.Elem().Kind() != reflect.Struct, "%v", fEf("PARAM_INVALID_STRUCT_PTR"))
 
 	inputs := make([]reflect.Value, len(args))
 	for i := range args {

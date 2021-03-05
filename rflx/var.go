@@ -33,12 +33,6 @@ var (
 	mkMap     = reflect.MakeMap
 	deepEqual = reflect.DeepEqual
 
-	typMAP    = reflect.Map
-	typSLICE  = reflect.Slice
-	typSTRUCT = reflect.Struct
-	typPTR    = reflect.Ptr
-	typARRAY  = reflect.Array
-
 	failPnOnErrWhen = fn.FailPnOnErrWhen
 	failPnOnErr     = fn.FailPnOnErr
 	failP1OnErrWhen = fn.FailP1OnErrWhen
