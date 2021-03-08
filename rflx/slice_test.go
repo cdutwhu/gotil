@@ -232,3 +232,160 @@ func TestKind(t *testing.T) {
 	fPln(reflect.TypeOf(obj))
 	fPln(reflect.TypeOf(obj).Kind())
 }
+
+func TestCanCover(t *testing.T) {
+	type args struct {
+		setA interface{}
+		setB interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  bool
+		want1 int
+	}{
+		{
+			name:  "OK",
+			args:  args{setA: nil, setB: []int{}},
+			want:  false,
+			want1: -1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{}, setB: nil},
+			want:  false,
+			want1: -1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{}, setB: []int{}},
+			want:  true,
+			want1: -1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{1, 2}, setB: []int{}},
+			want:  true,
+			want1: -1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{}, setB: []int{1, 2}},
+			want:  false,
+			want1: 0,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{1}, setB: []int{1, 2}},
+			want:  false,
+			want1: 1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{1, 2}, setB: []int{1, 2}},
+			want:  true,
+			want1: -1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{9, 8, 1, 7, 6, 1}, setB: []int{1, 2}},
+			want:  false,
+			want1: 1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{9, 1, 8, 2, 7, 3, 6}, setB: []int{1, 2}},
+			want:  true,
+			want1: -1,
+		},
+		{
+			name:  "OK",
+			args:  args{setA: []int{1, 1}, setB: []int{1, 1, 1, 1, 2}},
+			want:  false,
+			want1: 4,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := CanCover(tt.args.setA, tt.args.setB)
+			if got != tt.want {
+				t.Errorf("CanCover() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("CanCover() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_equal(t *testing.T) {
+	type args struct {
+		setA interface{}
+		setB interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := equal(tt.args.setA, tt.args.setB); got != tt.want {
+				t.Errorf("equal() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestEqual(t *testing.T) {
+	type args struct {
+		setGrp []interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    bool
+		want1   int
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name:    "OK",
+			args:    args{setGrp: []interface{}{[]int{}}},
+			want:    false,
+			want1:   -1,
+			wantErr: true,
+		},
+		{
+			name:    "OK",
+			args:    args{setGrp: []interface{}{nil, []int{}, []int{}}},
+			want:    false,
+			want1:   1,
+			wantErr: false,
+		},
+		{
+			name:    "OK",
+			args:    args{setGrp: []interface{}{[]int{2, 1, 0}, []int{0, 1, 2}, []int{0, 1, 1, 2}, nil}},
+			want:    false,
+			want1:   3,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1, err := Equal(tt.args.setGrp...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Equal() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Equal() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("Equal() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
