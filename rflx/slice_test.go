@@ -389,3 +389,75 @@ func TestEqual(t *testing.T) {
 		})
 	}
 }
+
+func TestFilterModify(t *testing.T) {
+	type args struct {
+		slc      interface{}
+		filter   func(idx, ele interface{}) bool
+		modifier func(idx, ele interface{}) interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want interface{}
+	}{
+		// TODO: Add test cases.
+		{
+			name: "OK",
+			args: args{
+				slc: []int{1, 2, 3},
+				filter: func(i, e interface{}) bool {
+					return e.(int) != 1
+				},
+				modifier: func(i, e interface{}) interface{} {
+					if e.(int) == 3 {
+						return 4
+					}
+					return e
+				},
+			},
+			want: []int{2, 4},
+		},
+		{
+			name: "OK",
+			args: args{
+				slc:    []int{1, 2, 3},
+				filter: nil,
+				modifier: func(i, e interface{}) interface{} {
+					if e.(int) == 3 {
+						return 4
+					}
+					return e
+				},
+			},
+			want: []int{1, 2, 4},
+		},
+		{
+			name: "OK",
+			args: args{
+				slc: []int{1, 2, 3},
+				filter: func(i, e interface{}) bool {
+					return e.(int) != 1
+				},
+				modifier: nil,
+			},
+			want: []int{2, 3},
+		},
+		{
+			name: "OK",
+			args: args{
+				slc:      []int{1, 2, 3},
+				filter:   nil,
+				modifier: nil,
+			},
+			want: []int{1, 2, 3},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := FilterModify(tt.args.slc, tt.args.filter, tt.args.modifier); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FilterModify() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

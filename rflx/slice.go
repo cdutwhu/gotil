@@ -5,6 +5,52 @@ import (
 	"reflect"
 )
 
+// FilterModify :
+func FilterModify(slc interface{}, filter func(idx, ele interface{}) bool, modifier func(idx, ele interface{}) interface{}) interface{} {
+	if slc == nil {
+		return nil
+	}
+	failP1OnErrWhen(tof(slc).Kind() != reflect.Slice, "%v: need [slice]", fEf("PARAM_INVALID"))
+
+	v := vof(slc)
+	l := v.Len()
+	if l == 0 {
+		return slc
+	}
+
+	fFlag, mFlag := true, true
+	if filter == nil {
+		fFlag = false
+	}
+	if modifier == nil {
+		mFlag = false
+	}
+
+	rSlc := mkSlc(tof(slc), 0, l)
+	switch {
+	case fFlag && mFlag:
+		for i := 0; i < l; i++ {
+			if itemdata := v.Index(i).Interface(); filter(i, itemdata) {
+				rSlc = appendX(rSlc, vof(modifier(i, itemdata)))
+			}
+		}
+	case fFlag && !mFlag:
+		for i := 0; i < l; i++ {
+			if item := v.Index(i); filter(i, item.Interface()) {
+				rSlc = appendX(rSlc, item)
+			}
+		}
+	case !fFlag && mFlag:
+		for i := 0; i < l; i++ {
+			rSlc = appendX(rSlc, vof(modifier(i, v.Index(i).Interface())))
+		}
+	default:
+		return slc
+	}
+
+	return rSlc.Interface()
+}
+
 // ToSet * : convert slice to set. i.e. remove duplicated items
 func ToSet(slc interface{}) interface{} {
 	if slc == nil {
