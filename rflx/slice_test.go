@@ -407,7 +407,7 @@ func TestFilterModify(t *testing.T) {
 			args: args{
 				slc: []int{1, 2, 3},
 				filter: func(i int, e interface{}) bool {
-					return e.(int) != 1
+					return e.(int) > 1
 				},
 				modifier: func(i int, e interface{}) interface{} {
 					if e.(int) == 3 {
@@ -417,6 +417,22 @@ func TestFilterModify(t *testing.T) {
 				},
 			},
 			want: []int{2, 4},
+		},
+		{
+			name: "OK",
+			args: args{
+				slc: []int{1, 2, 3},
+				filter: func(i int, e interface{}) bool {
+					return e.(int) >= 100
+				},
+				modifier: func(i int, e interface{}) interface{} {
+					if e.(int) == 3 {
+						return 4
+					}
+					return e
+				},
+			},
+			want: []int{},
 		},
 		{
 			name: "OK",
