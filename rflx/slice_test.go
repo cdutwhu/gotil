@@ -393,8 +393,8 @@ func TestEqual(t *testing.T) {
 func TestFilterModify(t *testing.T) {
 	type args struct {
 		slc      interface{}
-		filter   func(idx, ele interface{}) bool
-		modifier func(idx, ele interface{}) interface{}
+		filter   func(i int, e interface{}) bool
+		modifier func(i int, e interface{}) interface{}
 	}
 	tests := []struct {
 		name string
@@ -406,10 +406,10 @@ func TestFilterModify(t *testing.T) {
 			name: "OK",
 			args: args{
 				slc: []int{1, 2, 3},
-				filter: func(i, e interface{}) bool {
+				filter: func(i int, e interface{}) bool {
 					return e.(int) != 1
 				},
-				modifier: func(i, e interface{}) interface{} {
+				modifier: func(i int, e interface{}) interface{} {
 					if e.(int) == 3 {
 						return 4
 					}
@@ -423,7 +423,7 @@ func TestFilterModify(t *testing.T) {
 			args: args{
 				slc:    []int{1, 2, 3},
 				filter: nil,
-				modifier: func(i, e interface{}) interface{} {
+				modifier: func(i int, e interface{}) interface{} {
 					if e.(int) == 3 {
 						return 4
 					}
@@ -436,7 +436,7 @@ func TestFilterModify(t *testing.T) {
 			name: "OK",
 			args: args{
 				slc: []int{1, 2, 3},
-				filter: func(i, e interface{}) bool {
+				filter: func(i int, e interface{}) bool {
 					return e.(int) != 1
 				},
 				modifier: nil,

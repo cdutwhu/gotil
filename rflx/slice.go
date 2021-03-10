@@ -6,49 +6,76 @@ import (
 )
 
 // FilterModify :
-func FilterModify(slc interface{}, filter func(idx, ele interface{}) bool, modifier func(idx, ele interface{}) interface{}) interface{} {
+func FilterModify(slc interface{}, filter func(i int, e interface{}) bool, modifier func(i int, e interface{}) interface{}) interface{} {
 	if slc == nil {
 		return nil
 	}
 	failP1OnErrWhen(tof(slc).Kind() != reflect.Slice, "%v: need [slice]", fEf("PARAM_INVALID"))
 
-	v := vof(slc)
-	l := v.Len()
-	if l == 0 {
-		return slc
-	}
+	gSlc, r := ToGSlc(slc), []interface{}{}
 
-	fFlag, mFlag := true, true
-	if filter == nil {
-		fFlag = false
-	}
-	if modifier == nil {
-		mFlag = false
-	}
-
-	rSlc := mkSlc(tof(slc), 0, l)
 	switch {
-	case fFlag && mFlag:
-		for i := 0; i < l; i++ {
-			if itemdata := v.Index(i).Interface(); filter(i, itemdata) {
-				rSlc = appendX(rSlc, vof(modifier(i, itemdata)))
+	case filter != nil && modifier != nil:
+		for i, e := range gSlc {
+			if filter(i, e) {
+				r = append(r, modifier(i, e))
 			}
 		}
-	case fFlag && !mFlag:
-		for i := 0; i < l; i++ {
-			if item := v.Index(i); filter(i, item.Interface()) {
-				rSlc = appendX(rSlc, item)
+	case filter != nil && modifier == nil:
+		for i, e := range gSlc {
+			if filter(i, e) {
+				r = append(r, e)
 			}
 		}
-	case !fFlag && mFlag:
-		for i := 0; i < l; i++ {
-			rSlc = appendX(rSlc, vof(modifier(i, v.Index(i).Interface())))
+	case filter == nil && modifier != nil:
+		for i, e := range gSlc {
+			r = append(r, modifier(i, e))
 		}
 	default:
-		return slc
+		r = gSlc
 	}
 
-	return ToTSlc(ToGSlc(rSlc.Interface()))
+	return ToTSlc(r)
+
+	//
+
+	// v := vof(slc)
+	// l := v.Len()
+	// if l == 0 {
+	// 	return slc
+	// }
+
+	// fFlag, mFlag := true, true
+	// if filter == nil {
+	// 	fFlag = false
+	// }
+	// if modifier == nil {
+	// 	mFlag = false
+	// }
+
+	// rSlc := mkSlc(tof(slc), 0, l)
+	// switch {
+	// case fFlag && mFlag:
+	// 	for i := 0; i < l; i++ {
+	// 		if itemdata := v.Index(i).Interface(); filter(i, itemdata) {
+	// 			rSlc = appendX(rSlc, vof(modifier(i, itemdata)))
+	// 		}
+	// 	}
+	// case fFlag && !mFlag:
+	// 	for i := 0; i < l; i++ {
+	// 		if item := v.Index(i); filter(i, item.Interface()) {
+	// 			rSlc = appendX(rSlc, item)
+	// 		}
+	// 	}
+	// case !fFlag && mFlag:
+	// 	for i := 0; i < l; i++ {
+	// 		rSlc = appendX(rSlc, vof(modifier(i, v.Index(i).Interface())))
+	// 	}
+	// default:
+	// 	return slc
+	// }
+
+	// return ToTSlc(ToGSlc(rSlc.Interface()))
 }
 
 // ToSet * : convert slice to set. i.e. remove duplicated items
