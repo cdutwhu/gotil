@@ -48,7 +48,7 @@ func FilterModify(slc interface{}, filter func(idx, ele interface{}) bool, modif
 		return slc
 	}
 
-	return rSlc.Interface()
+	return ToTSlc(ToGSlc(rSlc.Interface()))
 }
 
 // ToSet * : convert slice to set. i.e. remove duplicated items
