@@ -12,27 +12,26 @@ func FilterModify(slc interface{},
 	dftRet interface{},
 ) interface{} {
 
-	gSlc, r := ToGSlc(slc), []interface{}{}
-
+	r := []interface{}{}
 	switch {
 	case filter != nil && modifier != nil:
-		for i, e := range gSlc {
+		for i, e := range ToGSlc(slc) {
 			if filter(i, e) {
 				r = append(r, modifier(i, e))
 			}
 		}
 	case filter != nil && modifier == nil:
-		for i, e := range gSlc {
+		for i, e := range ToGSlc(slc) {
 			if filter(i, e) {
 				r = append(r, e)
 			}
 		}
 	case filter == nil && modifier != nil:
-		for i, e := range gSlc {
+		for i, e := range ToGSlc(slc) {
 			r = append(r, modifier(i, e))
 		}
 	default:
-		r = gSlc
+		r = ToGSlc(slc)
 	}
 
 	if len(r) > 0 {
@@ -75,16 +74,48 @@ func ToGSlc(slc interface{}) (gSlc []interface{}) {
 	if slc == nil {
 		return nil
 	}
-	failP1OnErrWhen(tof(slc).Kind() != reflect.Slice, "%v: need [slice]", fEf("PARAM_INVALID"))
 
-	v := vof(slc)
-	l := v.Len()
-	if l == 0 {
-		return []interface{}{}
+	switch t := slc.(type) {
+	case []string:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []int:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []float64:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []int64:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []uint64:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []bool:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []reflect.Kind:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	case []interface{}:
+		for _, value := range t {
+			gSlc = append(gSlc, value)
+		}
+	default:
+		panic("slc must be slice type, OR need more 'case []type' in ToGSlc @" + fSf("%v", t))
 	}
-	for i := 0; i < l; i++ {
-		gSlc = append(gSlc, v.Index(i).Interface())
+
+	if len(gSlc) == 0 {
+		gSlc = []interface{}{}
 	}
+
 	return
 }
 
