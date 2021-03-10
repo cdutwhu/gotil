@@ -395,6 +395,7 @@ func TestFilterModify(t *testing.T) {
 		slc      interface{}
 		filter   func(i int, e interface{}) bool
 		modifier func(i int, e interface{}) interface{}
+		dftRet   interface{}
 	}
 	tests := []struct {
 		name string
@@ -431,6 +432,7 @@ func TestFilterModify(t *testing.T) {
 					}
 					return e
 				},
+				dftRet: []int{},
 			},
 			want: []int{},
 		},
@@ -471,7 +473,7 @@ func TestFilterModify(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilterModify(tt.args.slc, tt.args.filter, tt.args.modifier); !reflect.DeepEqual(got, tt.want) {
+			if got := FilterModify(tt.args.slc, tt.args.filter, tt.args.modifier, tt.args.dftRet); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("FilterModify() = %v, want %v", got, tt.want)
 			}
 		})

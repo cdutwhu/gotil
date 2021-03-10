@@ -9,9 +9,8 @@ import (
 func FilterModify(slc interface{},
 	filter func(i int, e interface{}) bool,
 	modifier func(i int, e interface{}) interface{},
+	dftRet interface{},
 ) interface{} {
-
-	failP1OnErrWhen(slc == nil || tof(slc).Kind() != reflect.Slice, "%v: slc needs [slice]", fEf("PARAM_INVALID"))
 
 	gSlc, r := ToGSlc(slc), []interface{}{}
 
@@ -39,7 +38,7 @@ func FilterModify(slc interface{},
 	if len(r) > 0 {
 		return ToTSlc(r)
 	}
-	return mkSlc(tof(slc), 0, 1).Interface()
+	return dftRet
 }
 
 // ToSet * : convert slice to set. i.e. remove duplicated items
